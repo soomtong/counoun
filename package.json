@@ -1,0 +1,24 @@
+{
+  "name": "counoun",
+  "version": "0.0.1",
+  "description": "simple orm for couchdb",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "couch",
+    "couchdb",
+    "nano",
+    "orm",
+    "counoun"
+  ],
+  "author": "soomtong@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "nano": "^6.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0"
+  }
+}
