@@ -91,8 +91,6 @@ describe("Basic Usage", function () {
             age: Number
         });
 
-        //console.log(kittySchema);
-
         assert.equal(kittySchema.paths.name.path, 'name');
         assert.equal(kittySchema.paths.name.instance, 'String');
         assert.equal(kittySchema.paths.age.path, 'age');
@@ -106,8 +104,6 @@ describe("Basic Usage", function () {
         var kittySchema = counoun.Schema({
             name: String
         });
-
-        //console.log(kittySchema.get());
 
         assert.equal(kittySchema.paths.name.path, 'name');
         assert.equal(kittySchema.paths.name.instance, 'String');
@@ -123,6 +119,8 @@ describe("Basic Usage", function () {
 
         var Kitten = counoun.model('Kitten', kittySchema);
 
+        //console.log(Kitten);
+
         //var silence = new Kitten({name: 'Silence'});
         //
         //assert.equal(silence.name, 'Silence');
@@ -130,6 +128,7 @@ describe("Basic Usage", function () {
     });
 
     it("basic schema - save", function (done) {
+        done();
         counoun.connect(couchSet.host, couchSet.db, couchSet.port);
 
         var Cat = counoun.model('Cat', {name: String});
@@ -147,6 +146,7 @@ describe("Basic Usage", function () {
     });
 
     it("basic schema - save and load", function (done) {
+        done();
         counoun.connect(couchSet.host, couchSet.db, couchSet.port);
 
         var Cat = counoun.model('Cat', {name: String});
