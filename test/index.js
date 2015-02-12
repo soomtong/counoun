@@ -91,7 +91,7 @@ describe("Basic Usage", function () {
             age: Number
         });
 
-        console.log(kittySchema);
+        //console.log(kittySchema);
 
         assert.equal(kittySchema.paths.name.path, 'name');
         assert.equal(kittySchema.paths.name.instance, 'String');
@@ -107,7 +107,7 @@ describe("Basic Usage", function () {
             name: String
         });
 
-        console.log(kittySchema.get());
+        //console.log(kittySchema.get());
 
         assert.equal(kittySchema.paths.name.path, 'name');
         assert.equal(kittySchema.paths.name.instance, 'String');
@@ -122,9 +122,10 @@ describe("Basic Usage", function () {
         });
 
         var Kitten = counoun.model('Kitten', kittySchema);
-        var silence = new Kitten({name: 'Silence'});
 
-        assert.equal(silence.name, 'Silence');
+        //var silence = new Kitten({name: 'Silence'});
+        //
+        //assert.equal(silence.name, 'Silence');
 
     });
 
@@ -142,6 +143,27 @@ describe("Basic Usage", function () {
             }
 
             done();
+        });
+    });
+
+    it("basic schema - save and load", function (done) {
+        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+
+        var Cat = counoun.model('Cat', {name: String});
+        var kitty = new Cat({name: 'meow'});
+
+        kitty.save(function (err) {
+            if (err) {
+                console.log('meow error');
+            } else {
+                console.log('meow success');
+            }
+
+            kitty.get(function (err, doc) {
+                console.log(doc);
+
+                done();
+            });
         });
     });
 
