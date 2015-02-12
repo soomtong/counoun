@@ -119,7 +119,7 @@ describe("Basic Usage", function () {
 
         var Kitten = counoun.model('Kitten', kittySchema);
 
-        //console.log(Kitten);
+        console.log(Kitten);
 
         //var silence = new Kitten({name: 'Silence'});
         //
