@@ -12,9 +12,6 @@ var couchSet = {
     }
 };
 
-var couchHost = 'http://localhost:5984/test2';
-var couchHostAuth = 'http://a:1@localhost:5984/test3';
-
 describe("Connection", function () {
 
     it("connection default", function () {
@@ -39,32 +36,6 @@ describe("Connection", function () {
         assert.equal(counoun.connection.host, 'localhost');
         assert.equal(counoun.connection.port, '5984');
         assert.equal(counoun.connection.name, 'test1');
-    });
-
-    it("connection with normal host", function () {
-        counoun.connect(couchHost);
-
-        assert.equal(counoun.connection.host, 'localhost');
-        assert.equal(counoun.connection.port, '5984');
-        assert.equal(counoun.connection.name, 'test2');
-    });
-
-    it("connection with auth", function () {
-        counoun.connect(couchHostAuth);
-
-        assert.equal(counoun.connection.host, 'localhost');
-        assert.equal(counoun.connection.port, '5984');
-        assert.equal(counoun.connection.name, 'test3');
-    });
-
-    it("connection with auth and callback", function () {
-        counoun.connect(couchHostAuth, function () {
-            //console.warn('=== callback ===', counoun.connection.host);
-        });
-
-        assert.equal(counoun.connection.host, 'localhost');
-        assert.equal(counoun.connection.port, '5984');
-        assert.equal(counoun.connection.name, 'test3');
     });
 
 });
@@ -119,11 +90,11 @@ describe("Basic Usage", function () {
 
         var Kitten = counoun.model('Kitten', kittySchema);
 
-        console.log(Kitten);
+        //console.log(Kitten);
 
-        //var silence = new Kitten({name: 'Silence'});
-        //
-        //assert.equal(silence.name, 'Silence');
+        var silence = new Kitten({name: 'Silence'});
+
+        assert.equal(silence.name, 'Silence');
 
     });
 
@@ -159,7 +130,7 @@ describe("Basic Usage", function () {
                 console.log('meow success');
             }
 
-            kitty.get(function (err, doc) {
+            Cat.find({ _id: kitty._id }, function (err, doc) {
                 console.log(doc);
 
                 done();
