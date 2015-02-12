@@ -19,11 +19,10 @@ describe("Connection", function () {
 
         assert.equal(counoun.connection.host, 'localhost');
         assert.equal(counoun.connection.port, '5984');
-        assert.equal(counoun.connection.name, 'test');
     });
 
     it("connection with set", function () {
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.port, couchSet.db);
 
         assert.equal(counoun.connection.host, 'localhost');
         assert.equal(counoun.connection.port, '5984');
@@ -31,7 +30,7 @@ describe("Connection", function () {
     });
 
     it("connection with set for auth", function () {
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port, couchSet.option);
+        counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
 
         assert.equal(counoun.connection.host, 'localhost');
         assert.equal(counoun.connection.port, '5984');

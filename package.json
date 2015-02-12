@@ -16,9 +16,7 @@
   "author": "soomtong@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "mpromise": "^0.5.5",
-    "nano": "^6.0.2",
-    "sliced": "0.0.5"
+    "nano": "^6.0.2"
   },
   "devDependencies": {
     "mocha": "^2.1.0"
