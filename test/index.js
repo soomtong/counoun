@@ -4,7 +4,6 @@ var counoun = require('../');
 var couchSet = {
     host: 'localhost',
     port: '5984',
-    db: 'test1',
     option: {
         ssl: false,
         user: 'a',
@@ -15,7 +14,6 @@ var couchSet = {
 var couchSet2 = {
     host: 'db1.haroopress.com',
     port: '80',
-    db: 'test2',
     option: {
         ssl: false,
         user: 'b',
@@ -34,41 +32,71 @@ describe("Connection", function () {
     });
 
     it("connection with set", function () {
-        counoun.connect(couchSet.host, couchSet.port, couchSet.db);
+        counoun.connect(couchSet.host, couchSet.port);
 
         assert.equal(counoun.connection.host, 'localhost');
         assert.equal(counoun.connection.port, '5984');
-        assert.equal(counoun.connection.name, 'test1');
     });
 
     it("connection with set for auth", function () {
-        counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
+        counoun.connect(couchSet.host, couchSet.port, couchSet.option);
 
         assert.equal(counoun.connection.host, couchSet.host);
         assert.equal(counoun.connection.port, couchSet.port);
-        assert.equal(counoun.connection.name, couchSet.db);
 
-        var connection = counoun.connection.db.info();
+        var connection = counoun.connection.db.config;
 
-        assert.equal(connection.uri.host, couchSet.host + ':' + couchSet.port);
-        assert.equal(connection.uri.hostname, couchSet.host);
-        assert.equal(connection.uri.port, couchSet.port);
-        assert.equal(connection.uri.pathname, '/' + couchSet.db);
+        assert.equal(connection.url, (couchSet.ssl ? 'https://' : 'http://')
+            + (couchSet.option.user + ':' + couchSet.option.pass) + '@'
+            + couchSet.host + ':' + couchSet.port);
     });
 
     it("connection with later configuration", function () {
         counoun.connect(couchSet2);
 
-        var connection = counoun.connection.db.info();
+        var database = 'test1';
+
+        var connection = counoun.connection.db.use(database).info();
 
         assert.equal(connection.uri.host, couchSet2.host + ':' + couchSet2.port);
         assert.equal(connection.uri.hostname, couchSet2.host);
         assert.equal(connection.uri.port, couchSet2.port);
-        assert.equal(connection.uri.pathname, '/' + couchSet2.db);
+        assert.equal(connection.uri.pathname, '/' + database);
     })
 });
 
-describe("Basic Usage", function () {
+describe("Direct Model", function () {
+
+    it("simple usage - save", function (done) {
+        counoun.connect(couchSet.host, couchSet.port, couchSet.option);
+
+        var database = 'test1';
+
+        var Dog = counoun.model(database);
+
+        Dog.save({name: "Corgi"}, function (err, result) {
+            console.log(result);
+
+            done();
+        });
+
+    });
+
+    it("simple usage - find", function (done) {
+        counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
+
+        var Dog = counoun.model('dog');
+
+        Dog.find({name: "Corgi"}, function (err, result) {
+            console.log(result);
+
+            done();
+        });
+    });
+
+});
+
+describe("Schema", function () {
 
     it("basic schema", function () {
         counoun.connect(couchSet.host, couchSet.db, couchSet.port);

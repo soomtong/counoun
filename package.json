@@ -16,6 +16,7 @@
   "author": "soomtong@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "agentkeepalive": "^1.2.0",
     "nano": "^6.0.2"
   },
   "devDependencies": {
