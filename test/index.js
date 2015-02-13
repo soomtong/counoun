@@ -44,7 +44,7 @@ describe("Connection", function () {
         assert.equal(counoun.connection.host, couchSet.host);
         assert.equal(counoun.connection.port, couchSet.port);
 
-        var connection = counoun.connection.db.config;
+        var connection = counoun.connection.nano.config;
 
         assert.equal(connection.url, (couchSet.ssl ? 'https://' : 'http://')
             + (couchSet.option.user + ':' + couchSet.option.pass) + '@'
@@ -56,19 +56,31 @@ describe("Connection", function () {
 
         var database = 'test1';
 
-        var connection = counoun.connection.db.use(database).info();
+        var connection = counoun.connection.nano.use(database).info();
 
         assert.equal(connection.uri.host, couchSet2.host + ':' + couchSet2.port);
         assert.equal(connection.uri.hostname, couchSet2.host);
         assert.equal(connection.uri.port, couchSet2.port);
         assert.equal(connection.uri.pathname, '/' + database);
-    })
+    });
 });
 
 describe("Direct Model", function () {
 
     var tempID = null;
     var tempDoc = {name: "Corgi"};
+
+    before(function () {
+        counoun.connect(couchSet.host, couchSet.port, couchSet.option);
+
+        counoun.drop('test1', function () {
+            console.log('destroy test1 database');
+        });
+        counoun.drop('test2', function () {
+            console.log('destroy test2 database');
+        });
+
+    });
 
     it("simple usage - save with promise", function () {
         counoun.connect(couchSet.host, couchSet.port, couchSet.option);
@@ -87,7 +99,7 @@ describe("Direct Model", function () {
     it("simple usage - save with callback", function (done) {
         counoun.connect(couchSet.host, couchSet.port, couchSet.option);
 
-        var database = 'test1';
+        var database = 'test2';
 
         var Dog = counoun.model(database);
 
@@ -101,9 +113,9 @@ describe("Direct Model", function () {
     });
 
     it("simple usage - get with id", function (done) {
-        counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
+        counoun.connect(couchSet.host, couchSet.port, couchSet.nano, couchSet.option);
 
-        var database = 'test1';
+        var database = 'test2';
 
         var Dog = counoun.model(database);
 
@@ -115,7 +127,7 @@ describe("Direct Model", function () {
     });
 
     it("simple usage - view with specified design", function (done) {
-        counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
+        counoun.connect(couchSet.host, couchSet.port, couchSet.nano, couchSet.option);
 
         var database = 'test1';
 
@@ -138,7 +150,7 @@ describe("Direct Model", function () {
 describe("Schema", function () {
 
     it("basic schema", function () {
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
 
         var kittySchema = counoun.Schema({
             name: String
@@ -150,7 +162,7 @@ describe("Schema", function () {
     });
 
     it("basic schema 2", function () {
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
 
         var kittySchema = counoun.Schema({
             name: String,
@@ -165,7 +177,7 @@ describe("Schema", function () {
     });
 
     it("basic schema - get schema", function () {
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
 
         var kittySchema = counoun.Schema({
             name: String
@@ -177,13 +189,13 @@ describe("Schema", function () {
     });
 
     it("basic schema - load to model ", function () {
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
 
         var kittySchema = counoun.Schema({
             name: String
         });
 
-        var Kitten = counoun.model('Kitten', kittySchema);
+        var Kitten = counoun.model('kitten', kittySchema);
 
         //console.log(Kitten);
 
@@ -195,9 +207,9 @@ describe("Schema", function () {
 
     it("basic schema - save", function (done) {
         done();
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
 
-        var Cat = counoun.model('Cat', {name: String});
+        var Cat = counoun.model('cat', {name: String});
         var kitty = new Cat({name: 'meow'});
 
         kitty.save(function (err) {
@@ -213,7 +225,7 @@ describe("Schema", function () {
 
     it("basic schema - save and load", function (done) {
         done();
-        counoun.connect(couchSet.host, couchSet.db, couchSet.port);
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
 
         var Cat = counoun.model('Cat', {name: String});
         var kitty = new Cat({name: 'meow'});
