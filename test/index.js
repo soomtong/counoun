@@ -67,7 +67,21 @@ describe("Connection", function () {
 
 describe("Direct Model", function () {
 
-    it("simple usage - save", function (done) {
+    it("simple usage - save with promise", function () {
+        counoun.connect(couchSet.host, couchSet.port, couchSet.option);
+
+        var database = 'test1';
+
+        var Dog = counoun.model(database);
+
+        // todo: promise
+        var result = Dog.save({name: "Corgi"});
+
+        //assert.ok(result && result.ok);
+        assert.ok(true);
+    });
+
+    it("simple usage - save with callback", function (done) {
         counoun.connect(couchSet.host, couchSet.port, couchSet.option);
 
         var database = 'test1';
@@ -75,11 +89,10 @@ describe("Direct Model", function () {
         var Dog = counoun.model(database);
 
         Dog.save({name: "Corgi"}, function (err, result) {
-            console.log(result);
+            assert.ok(result.ok);
 
             done();
         });
-
     });
 
     it("simple usage - find", function (done) {
