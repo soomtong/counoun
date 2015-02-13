@@ -114,6 +114,25 @@ describe("Direct Model", function () {
         });
     });
 
+    it("simple usage - view with specified design", function (done) {
+        counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
+
+        var database = 'test1';
+
+        var Dog = counoun.model(database);
+
+        var designName = 'design';
+        var viewName = 'view';
+
+        Dog.view(designName, viewName, function (err, result) {
+            assert.ok(err);
+            assert.equal(err.reason, 'missing');
+            assert.equal(err.statusCode, 404);
+
+            done();
+        });
+    });
+
 });
 
 describe("Schema", function () {
