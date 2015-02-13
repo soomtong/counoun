@@ -146,3 +146,103 @@ describe("Direct Model", function () {
     });
 
 });
+
+describe("Schema", function () {
+
+    it("basic schema", function () {
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
+
+        var kittySchema = counoun.Schema({
+            name: String
+        });
+
+        assert.equal(kittySchema.paths.name.path, 'name');
+        assert.equal(kittySchema.paths.name.instance, 'String');
+
+    });
+
+    it("basic schema 2", function () {
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
+
+        var kittySchema = counoun.Schema({
+            name: String,
+            age: Number
+        });
+
+        assert.equal(kittySchema.paths.name.path, 'name');
+        assert.equal(kittySchema.paths.name.instance, 'String');
+        assert.equal(kittySchema.paths.age.path, 'age');
+        assert.equal(kittySchema.paths.age.instance, 'Number');
+
+    });
+
+    it("basic schema - get schema", function () {
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
+
+        var kittySchema = counoun.Schema({
+            name: String
+        });
+
+        assert.equal(kittySchema.paths.name.path, 'name');
+        assert.equal(kittySchema.paths.name.instance, 'String');
+
+    });
+
+    it("basic schema - load to model ", function () {
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
+
+        var kittySchema = counoun.Schema({
+            name: String
+        });
+
+        var Kitten = counoun.model('kitten', kittySchema);
+
+        //console.log(Kitten);
+
+        var silence = new Kitten({name: 'Silence'});
+
+        assert.equal(silence.name, 'Silence');
+
+    });
+
+    it("basic schema - save", function (done) {
+        done();
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
+
+        var Cat = counoun.model('cat', {name: String});
+        var kitty = new Cat({name: 'meow'});
+
+        kitty.save(function (err) {
+            if (err) {
+                console.log('meow error');
+            } else {
+                console.log('meow success');
+            }
+
+            done();
+        });
+    });
+
+    it("basic schema - save and load", function (done) {
+        done();
+        counoun.connect(couchSet.host, couchSet.nano, couchSet.port);
+
+        var Cat = counoun.model('Cat', {name: String});
+        var kitty = new Cat({name: 'meow'});
+
+        kitty.save(function (err) {
+            if (err) {
+                console.log('meow error');
+            } else {
+                console.log('meow success');
+            }
+
+            Cat.find({ _id: kitty._id }, function (err, doc) {
+                console.log(doc);
+
+                done();
+            });
+        });
+    });
+
+});
