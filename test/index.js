@@ -67,6 +67,9 @@ describe("Connection", function () {
 
 describe("Direct Model", function () {
 
+    var tempID = null;
+    var tempDoc = {name: "Corgi"};
+
     it("simple usage - save with promise", function () {
         counoun.connect(couchSet.host, couchSet.port, couchSet.option);
 
@@ -88,20 +91,24 @@ describe("Direct Model", function () {
 
         var Dog = counoun.model(database);
 
-        Dog.save({name: "Corgi"}, function (err, result) {
+        Dog.save(tempDoc, function (err, result) {
             assert.ok(result.ok);
+
+            tempID = result.id;
 
             done();
         });
     });
 
-    it("simple usage - find", function (done) {
+    it("simple usage - get with id", function (done) {
         counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
 
-        var Dog = counoun.model('dog');
+        var database = 'test1';
 
-        Dog.find({name: "Corgi"}, function (err, result) {
-            console.log(result);
+        var Dog = counoun.model(database);
+
+        Dog.get(tempID, function (err, result) {
+            assert.equal(result.name, tempDoc.name);
 
             done();
         });
