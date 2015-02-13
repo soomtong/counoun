@@ -2,13 +2,24 @@ var assert = require("assert");
 var counoun = require('../');
 
 var couchSet = {
-    ssl: false,
     host: 'localhost',
     port: '5984',
     db: 'test1',
     option: {
+        ssl: false,
         user: 'a',
         pass: '1'
+    }
+};
+
+var couchSet2 = {
+    host: 'db1.haroopress.com',
+    port: '80',
+    db: 'test2',
+    option: {
+        ssl: false,
+        user: 'b',
+        pass: '2'
     }
 };
 
@@ -19,6 +30,7 @@ describe("Connection", function () {
 
         assert.equal(counoun.connection.host, 'localhost');
         assert.equal(counoun.connection.port, '5984');
+
     });
 
     it("connection with set", function () {
@@ -32,10 +44,11 @@ describe("Connection", function () {
     it("connection with set for auth", function () {
         counoun.connect(couchSet.host, couchSet.port, couchSet.db, couchSet.option);
 
-        var connection = counoun.connection.db.info();
         assert.equal(counoun.connection.host, couchSet.host);
         assert.equal(counoun.connection.port, couchSet.port);
         assert.equal(counoun.connection.name, couchSet.db);
+
+        var connection = counoun.connection.db.info();
 
         assert.equal(connection.uri.host, couchSet.host + ':' + couchSet.port);
         assert.equal(connection.uri.hostname, couchSet.host);
@@ -43,6 +56,16 @@ describe("Connection", function () {
         assert.equal(connection.uri.pathname, '/' + couchSet.db);
     });
 
+    it("connection with later configuration", function () {
+        counoun.connect(couchSet2);
+
+        var connection = counoun.connection.db.info();
+
+        assert.equal(connection.uri.host, couchSet2.host + ':' + couchSet2.port);
+        assert.equal(connection.uri.hostname, couchSet2.host);
+        assert.equal(connection.uri.port, couchSet2.port);
+        assert.equal(connection.uri.pathname, '/' + couchSet2.db);
+    })
 });
 
 describe("Basic Usage", function () {
