@@ -1,6 +1,6 @@
 {
   "name": "counoun",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "simple orm for couchdb",
   "main": "index.js",
   "scripts": {
